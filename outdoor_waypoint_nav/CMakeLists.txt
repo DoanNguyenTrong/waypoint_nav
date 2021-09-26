@@ -4,16 +4,38 @@ project(outdoor_waypoint_nav)
 set(CMAKE_CXX_FLAGS "-std=c++11")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/cmake/geographiclib/")
 
+
+# find_package(catkin REQUIRED COMPONENTS
+#   roscpp
+#   rospy
+#   std_msgs
+#   tf
+#   roslib
+#   roslaunch
+#   robot_localization
+# )
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
   rospy
+  roscpp
+  tf2_ros
+  geometry_msgs
+  nav_msgs
+  sensor_msgs
+  dynamic_reconfigure
+  orocos_kdl
+  robot_localization
   std_msgs
   tf
+  geographic_msgs
   roslib
-  roslaunch
+  
 )
+
+find_package(GeographicLib REQUIRED)
+
 
 catkin_package()
 roslaunch_add_file_check(launch)
@@ -32,13 +54,13 @@ add_executable(calibrate_heading src/calibrate_heading.cpp)
 add_executable(safety_node src/safety_node.cpp)
 add_executable(switch_controllers src/switch_controllers.cpp)
 
-target_link_libraries(gps_waypoint ${catkin_LIBRARIES})
+target_link_libraries(gps_waypoint ${catkin_LIBRARIES} ${GeographicLib_LIBRARIES})
 # target_link_libraries(gps_waypoint_continuous ${catkin_LIBRARIES})
-target_link_libraries(gps_waypoint_continuous1 ${catkin_LIBRARIES})
-target_link_libraries(gps_waypoint_continuous2 ${catkin_LIBRARIES})
-target_link_libraries(gps_waypoint_mapping ${catkin_LIBRARIES})
+target_link_libraries(gps_waypoint_continuous1 ${catkin_LIBRARIES} ${GeographicLib_LIBRARIES})
+target_link_libraries(gps_waypoint_continuous2 ${catkin_LIBRARIES} ${GeographicLib_LIBRARIES})
+target_link_libraries(gps_waypoint_mapping ${catkin_LIBRARIES} ${GeographicLib_LIBRARIES})
 target_link_libraries(collect_gps_waypoints ${catkin_LIBRARIES})
-target_link_libraries(plot_gps_waypoints ${catkin_LIBRARIES})
+target_link_libraries(plot_gps_waypoints ${catkin_LIBRARIES} ${GeographicLib_LIBRARIES})
 target_link_libraries(calibrate_heading ${catkin_LIBRARIES})
 target_link_libraries(safety_node ${catkin_LIBRARIES})
 target_link_libraries(switch_controllers ${catkin_LIBRARIES})
